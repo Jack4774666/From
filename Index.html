@@ -1,0 +1,2615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FROM — The Town That Won’t Let You Leave</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --black: #020707;
+      --void: #061011;
+      --deep: #08191b;
+      --deep-2: #0b2225;
+      --petrol: #12383d;
+      --teal: #1b5960;
+      --cyan: #8cc8c8;
+      --cold: #c8eeee;
+      --chalk: #f0ede3;
+      --chalk-dim: #b9beb8;
+      --mold: #7e8f6b;
+      --rot: #8b7f48;
+      --amber: #d8b552;
+      --blood: #6e1618;
+      --blood-hot: #b72b2f;
+      --paper: rgba(240, 237, 227, 0.82);
+      --glass: rgba(8, 25, 27, 0.68);
+      --border: rgba(200, 238, 238, 0.14);
+      --border-hot: rgba(216, 181, 82, 0.35);
+      --font-logo: "Special Elite", system-ui, monospace;
+      --font-display: "Cinzel", Georgia, serif;
+      --font-body: "Inter", Arial, sans-serif;
+      --shadow: 0 35px 90px rgba(0, 0, 0, 0.65);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 78% 18%, rgba(140, 200, 200, 0.12), transparent 28%),
+        radial-gradient(circle at 15% 8%, rgba(216, 181, 82, 0.08), transparent 32%),
+        linear-gradient(180deg, #020707 0%, #061011 45%, #020707 100%);
+      color: var(--chalk);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.12;
+      z-index: 9999;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 3px 3px;
+      mix-blend-mode: overlay;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 0%, transparent 48%, rgba(0,0,0,0.48) 100%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.25), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.28));
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    .container {
+      width: min(1220px, calc(100% - 44px));
+      margin: 0 auto;
+    }
+
+    .noise-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(140, 200, 200, 0.24), rgba(216,181,82,0.32), transparent);
+    }
+
+    .section {
+      position: relative;
+      padding: 120px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--amber);
+      font-size: 12px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: var(--amber);
+      box-shadow: 0 0 16px rgba(216,181,82,0.8);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(34px, 6vw, 74px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: var(--chalk);
+      text-shadow: 0 0 35px rgba(140, 200, 200, 0.13);
+    }
+
+    .section-copy {
+      color: var(--chalk-dim);
+      max-width: 720px;
+      line-height: 1.9;
+      font-size: 16px;
+      margin-top: 22px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.85s ease, transform 0.85s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* NAV */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 78px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(2, 7, 7, 0.94), rgba(2, 7, 7, 0.55), transparent);
+      backdrop-filter: blur(12px);
+      transition: 0.35s ease;
+    }
+
+    .nav.scrolled {
+      height: 68px;
+      background: rgba(2, 7, 7, 0.92);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      width: min(1320px, calc(100% - 38px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      position: relative;
+      font-family: var(--font-logo);
+      font-size: 34px;
+      letter-spacing: 0.18em;
+      color: var(--chalk);
+      text-shadow:
+        0 0 12px rgba(240, 237, 227, 0.2),
+        2px 0 0 rgba(140, 200, 200, 0.12),
+        -2px 0 0 rgba(183, 43, 47, 0.10);
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      left: 1px;
+      right: 8px;
+      bottom: -7px;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, transparent 0 8px, rgba(240,237,227,0.65) 8px 18px);
+      opacity: 0.5;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(240, 237, 227, 0.72);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      transition: 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--cold);
+      text-shadow: 0 0 16px rgba(140, 200, 200, 0.8);
+    }
+
+    .watch-btn {
+      border: 1px solid rgba(216, 181, 82, 0.45);
+      color: var(--chalk);
+      background:
+        linear-gradient(135deg, rgba(216,181,82,0.22), rgba(27,89,96,0.15)),
+        rgba(6, 16, 17, 0.78);
+      padding: 13px 18px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.17em;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 0 30px rgba(216,181,82,0.08);
+    }
+
+    .watch-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--amber);
+      box-shadow: 0 0 35px rgba(216,181,82,0.25);
+    }
+
+    .menu-btn {
+      display: none;
+      border: 1px solid var(--border);
+      color: var(--chalk);
+      background: rgba(255,255,255,0.04);
+      padding: 11px 12px;
+      cursor: pointer;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding-top: 82px;
+    }
+
+    #mistCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(2,7,7,0.96) 0%, rgba(2,7,7,0.74) 42%, rgba(2,7,7,0.35) 66%, rgba(2,7,7,0.82) 100%),
+        radial-gradient(circle at 70% 35%, rgba(140,200,200,0.15), transparent 32%),
+        radial-gradient(circle at 82% 70%, rgba(216,181,82,0.12), transparent 24%);
+      z-index: 2;
+    }
+
+    .hero-poster-wall {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      opacity: 0.62;
+      filter: saturate(0.65) contrast(1.18) brightness(0.75);
+    }
+
+    .poster-panel {
+      min-height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      transform: scale(1.04);
+    }
+
+    .poster-panel.one {
+      background-image:
+        linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.86)),
+        url("images/from-poster-1.png");
+    }
+
+    .poster-panel.two {
+      background-image:
+        linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.9)),
+        url("images/from-poster-2.png");
+    }
+
+    .poster-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 40% 28%, rgba(140,200,200,0.2), transparent 36%),
+        linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.78));
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 5;
+      width: min(1320px, calc(100% - 44px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 58px;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--amber);
+      font-size: 12px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 60px;
+      animation: fadeUp 1s ease 0.15s both;
+    }
+
+    .hero-kicker span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blood-hot);
+      box-shadow: 0 0 18px rgba(183,43,47,0.8);
+    }
+
+    .hero-title {
+      font-family: var(--font-logo);
+      font-size: clamp(96px, 18vw, 230px);
+      line-height: 0.77;
+      letter-spacing: 0.03em;
+      color: var(--chalk);
+      text-shadow:
+        0 0 16px rgba(240,237,227,0.2),
+        0 0 50px rgba(140,200,200,0.18),
+        7px 3px 0 rgba(2,7,7,0.75);
+      animation: fadeUp 1s ease 0.28s both, titleFlicker 4.5s linear infinite;
+    }
+
+    .hero-title small {
+      display: block;
+      margin-left: 8px;
+      margin-top: 18px;
+      font-family: var(--font-display);
+      font-size: clamp(19px, 2vw, 31px);
+      letter-spacing: 0.16em;
+      color: rgba(240,237,227,0.78);
+      text-transform: uppercase;
+    }
+
+    .hero-desc {
+      max-width: 710px;
+      margin-top: 30px;
+      color: rgba(240,237,227,0.72);
+      font-size: clamp(16px, 1.5vw, 20px);
+      line-height: 1.9;
+      animation: fadeUp 1s ease 0.42s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+      animation: fadeUp 1s ease 0.56s both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 24px;
+      border: 1px solid transparent;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.28s ease;
+    }
+
+    .btn-primary {
+      background:
+        linear-gradient(135deg, rgba(216,181,82,0.28), rgba(183,43,47,0.14)),
+        #0b2225;
+      color: var(--chalk);
+      border-color: rgba(216,181,82,0.45);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35), 0 0 30px rgba(216,181,82,0.11);
+    }
+
+    .btn-secondary {
+      background: rgba(240,237,227,0.05);
+      color: var(--chalk);
+      border-color: rgba(240,237,227,0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      border-color: var(--cold);
+      box-shadow: 0 0 35px rgba(140,200,200,0.2);
+    }
+
+    .hero-info {
+      display: grid;
+      gap: 16px;
+      animation: fadeIn 1.2s ease 0.7s both;
+    }
+
+    .signal-card {
+      background:
+        linear-gradient(180deg, rgba(11, 34, 37, 0.72), rgba(2, 7, 7, 0.76)),
+        radial-gradient(circle at 20% 0%, rgba(140,200,200,0.18), transparent 28%);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .signal-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent, rgba(240,237,227,0.06), transparent);
+      transform: translateX(-120%);
+      animation: shimmer 7s ease-in-out infinite;
+    }
+
+    .signal-card h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--chalk);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .signal-card p {
+      color: var(--chalk-dim);
+      line-height: 1.7;
+      font-size: 14px;
+      position: relative;
+    }
+
+    .rules-mini {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .mini-rule {
+      background: rgba(240,237,227,0.045);
+      border: 1px solid rgba(240,237,227,0.1);
+      padding: 16px;
+      min-height: 120px;
+    }
+
+    .mini-rule strong {
+      display: block;
+      font-family: var(--font-display);
+      color: var(--cold);
+      margin-bottom: 8px;
+    }
+
+    .mini-rule span {
+      color: rgba(240,237,227,0.62);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%);
+      color: rgba(240,237,227,0.55);
+      letter-spacing: 0.22em;
+      font-size: 11px;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .scroll-cue::after {
+      content: "";
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(var(--cold), transparent);
+      animation: drip 1.8s ease-in-out infinite;
+    }
+
+    /* TICKER */
+    .ticker {
+      position: relative;
+      z-index: 5;
+      overflow: hidden;
+      background: linear-gradient(90deg, #061011, #10282c, #061011);
+      border-top: 1px solid rgba(140,200,200,0.12);
+      border-bottom: 1px solid rgba(140,200,200,0.12);
+      white-space: nowrap;
+    }
+
+    .ticker-track {
+      display: inline-flex;
+      gap: 44px;
+      padding: 14px 0;
+      animation: ticker 32s linear infinite;
+    }
+
+    .ticker span {
+      font-family: var(--font-logo);
+      color: rgba(240,237,227,0.84);
+      letter-spacing: 0.12em;
+      font-size: 16px;
+    }
+
+    .ticker b {
+      color: var(--amber);
+      font-family: var(--font-body);
+      letter-spacing: 0.18em;
+      font-size: 12px;
+    }
+
+    /* OVERVIEW */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .poster-card {
+      position: sticky;
+      top: 96px;
+      border: 1px solid var(--border);
+      background: rgba(240,237,227,0.04);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .poster-art {
+      aspect-ratio: 4 / 5;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(2,7,7,0.05), rgba(2,7,7,0.78)),
+        radial-gradient(circle at 60% 20%, rgba(140,200,200,0.20), transparent 34%),
+        linear-gradient(135deg, #10282c, #061011);
+      overflow: hidden;
+    }
+
+    .poster-art::before {
+      content: "FROM";
+      position: absolute;
+      left: 8%;
+      bottom: 12%;
+      font-family: var(--font-logo);
+      color: var(--chalk);
+      font-size: clamp(62px, 8vw, 110px);
+      letter-spacing: 0.06em;
+      text-shadow: 0 0 25px rgba(240,237,227,0.17);
+      z-index: 3;
+    }
+
+    .poster-art::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        url("https://images.immediate.co.uk/production/volatile/sites/3/2024/10/from-season-3-episode-5-a659385.jpg?quality=90&resize=980%2C654") center / cover;
+      mix-blend-mode: screen;
+      opacity: 0.26;
+      filter: grayscale(0.5) contrast(1.2) brightness(0.8);
+    }
+
+    .tree-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 42%;
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,0.88)),
+        repeating-linear-gradient(88deg, transparent 0 12px, rgba(0,0,0,0.55) 13px 16px);
+      z-index: 2;
+      clip-path: polygon(0 100%, 0 45%, 5% 68%, 8% 38%, 12% 66%, 17% 28%, 20% 70%, 24% 34%, 28% 74%, 34% 20%, 38% 70%, 42% 38%, 46% 68%, 52% 30%, 56% 72%, 61% 42%, 64% 75%, 70% 24%, 74% 72%, 80% 38%, 84% 68%, 90% 28%, 94% 70%, 100% 40%, 100% 100%);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      background: rgba(240,237,227,0.04);
+      padding: 20px 16px;
+    }
+
+    .stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 38px;
+      color: var(--chalk);
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      color: rgba(240,237,227,0.58);
+      margin-top: 7px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .quote-box {
+      margin-top: 34px;
+      padding: 28px;
+      border-left: 3px solid var(--amber);
+      background:
+        linear-gradient(90deg, rgba(216,181,82,0.08), transparent),
+        rgba(240,237,227,0.035);
+    }
+
+    .quote-box p {
+      color: var(--paper);
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2vw, 30px);
+      line-height: 1.45;
+    }
+
+    /* SEASONS */
+    .seasons-grid {
+      margin-top: 54px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .season-card {
+      min-height: 420px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(140,200,200,0.13), transparent 35%),
+        linear-gradient(180deg, rgba(16,40,44,0.85), rgba(3,10,10,0.95));
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.26);
+      transition: 0.35s ease;
+    }
+
+    .season-card::before {
+      content: attr(data-season);
+      position: absolute;
+      right: -18px;
+      top: -25px;
+      font-family: var(--font-display);
+      font-size: 160px;
+      line-height: 1;
+      font-weight: 900;
+      color: rgba(240,237,227,0.035);
+    }
+
+    .season-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,0.52)),
+        radial-gradient(circle at 20% 90%, rgba(216,181,82,0.12), transparent 28%);
+      pointer-events: none;
+    }
+
+    .season-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-hot);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.46), 0 0 36px rgba(140,200,200,0.09);
+    }
+
+    .season-card h3,
+    .season-card p,
+    .season-card ul,
+    .season-card .season-badge {
+      position: relative;
+      z-index: 1;
+    }
+
+    .season-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--amber);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .season-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--amber);
+      border-radius: 50%;
+      box-shadow: 0 0 14px rgba(216,181,82,0.8);
+    }
+
+    .season-card h3 {
+      font-family: var(--font-display);
+      font-size: 30px;
+      margin-bottom: 14px;
+    }
+
+    .season-card p {
+      color: rgba(240,237,227,0.66);
+      line-height: 1.75;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .season-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: rgba(240,237,227,0.72);
+      font-size: 13px;
+    }
+
+    .season-card li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .season-card li::before {
+      content: "✦";
+      color: var(--amber);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    /* LORE */
+    .lore-board {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .lore-card {
+      min-height: 260px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(240,237,227,0.055), rgba(240,237,227,0.02)),
+        rgba(6,16,17,0.78);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: 0.32s ease;
+    }
+
+    .lore-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(140,200,200,0.32);
+      background:
+        linear-gradient(180deg, rgba(140,200,200,0.075), rgba(240,237,227,0.02)),
+        rgba(6,16,17,0.86);
+    }
+
+    .lore-icon {
+      font-size: 33px;
+      margin-bottom: 22px;
+      filter: grayscale(0.2);
+    }
+
+    .lore-card h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: var(--chalk);
+    }
+
+    .lore-card p {
+      color: rgba(240,237,227,0.63);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .lore-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--amber), transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: 0.32s ease;
+    }
+
+    .lore-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* CHARACTERS */
+    .character-tools {
+      margin-top: 42px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      background: rgba(240,237,227,0.035);
+      border: 1px solid var(--border);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      border: 1px solid rgba(240,237,227,0.13);
+      background: rgba(240,237,227,0.035);
+      color: rgba(240,237,227,0.72);
+      padding: 10px 14px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 900;
+      font-size: 11px;
+      transition: 0.25s ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      color: var(--chalk);
+      border-color: rgba(216,181,82,0.52);
+      background: rgba(216,181,82,0.09);
+    }
+
+    .search {
+      min-width: min(360px, 100%);
+      background: rgba(2,7,7,0.55);
+      border: 1px solid rgba(240,237,227,0.12);
+      color: var(--chalk);
+      padding: 13px 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .search::placeholder {
+      color: rgba(240,237,227,0.38);
+    }
+
+    .characters-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .character-card {
+      min-height: 470px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(140,200,200,0.13), transparent 28%),
+        rgba(6,16,17,0.86);
+      cursor: pointer;
+      transition: 0.32s ease;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.28);
+    }
+
+    .character-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(216,181,82,0.42);
+      box-shadow: 0 28px 85px rgba(0,0,0,0.54), 0 0 34px rgba(140,200,200,0.11);
+    }
+
+    .character-img {
+      height: 270px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(140,200,200,0.28), transparent 26%),
+        linear-gradient(135deg, #10282c, #020707);
+    }
+
+    .character-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(0.18) saturate(0.68) contrast(1.18) brightness(0.82);
+      transition: 0.5s ease;
+    }
+
+    .character-card:hover .character-img img {
+      transform: scale(1.08);
+      filter: grayscale(0.05) saturate(0.8) contrast(1.2) brightness(0.92);
+    }
+
+    .character-img::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent 30%, rgba(6,16,17,0.65) 78%, rgba(6,16,17,1) 100%),
+        radial-gradient(circle at 50% 10%, transparent, rgba(0,0,0,0.42));
+      z-index: 2;
+    }
+
+    .fallback-face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-logo);
+      font-size: 72px;
+      color: rgba(240,237,227,0.55);
+      z-index: 1;
+    }
+
+    .tag {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 5;
+      background: rgba(2,7,7,0.72);
+      border: 1px solid rgba(216,181,82,0.35);
+      color: var(--amber);
+      padding: 8px 10px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 900;
+      backdrop-filter: blur(8px);
+    }
+
+    .character-body {
+      padding: 21px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .character-body h3 {
+      font-family: var(--font-display);
+      font-size: 23px;
+      line-height: 1.1;
+      color: var(--chalk);
+      margin-bottom: 7px;
+    }
+
+    .actor {
+      color: var(--amber);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 13px;
+    }
+
+    .short {
+      color: rgba(240,237,227,0.63);
+      font-size: 14px;
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 7px 9px;
+      border: 1px solid rgba(240,237,227,0.1);
+      color: rgba(240,237,227,0.58);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      font-weight: 800;
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* MYSTERY BOARD */
+    .mystery-wrap {
+      margin-top: 56px;
+      position: relative;
+      min-height: 560px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 50% 40%, rgba(140,200,200,0.1), transparent 35%),
+        linear-gradient(135deg, rgba(10,35,38,0.9), rgba(3,10,10,0.94));
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .mystery-wrap svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.42;
+    }
+
+    .pin {
+      position: absolute;
+      width: 220px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(240,237,227,0.09), rgba(240,237,227,0.025)),
+        rgba(2,7,7,0.72);
+      border: 1px solid rgba(240,237,227,0.14);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 55px rgba(0,0,0,0.35);
+    }
+
+    .pin::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -8px;
+      width: 14px;
+      height: 14px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: var(--blood-hot);
+      box-shadow: 0 0 16px rgba(183,43,47,0.9);
+    }
+
+    .pin h3 {
+      font-family: var(--font-display);
+      color: var(--chalk);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .pin p {
+      color: rgba(240,237,227,0.62);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .pin:nth-of-type(1) { left: 7%; top: 12%; transform: rotate(-2deg); }
+    .pin:nth-of-type(2) { right: 9%; top: 10%; transform: rotate(3deg); }
+    .pin:nth-of-type(3) { left: 42%; top: 37%; transform: rotate(1deg); }
+    .pin:nth-of-type(4) { left: 12%; bottom: 12%; transform: rotate(3deg); }
+    .pin:nth-of-type(5) { right: 13%; bottom: 14%; transform: rotate(-3deg); }
+
+    /* GALLERY */
+    .gallery {
+      margin-top: 54px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+      grid-auto-rows: 270px;
+      gap: 18px;
+    }
+
+    .gallery-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #061011;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.26);
+    }
+
+    .gallery-card.large {
+      grid-row: span 2;
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(0.15) saturate(0.72) contrast(1.16) brightness(0.78);
+      transition: 0.6s ease;
+    }
+
+    .gallery-card:hover img {
+      transform: scale(1.08);
+      filter: grayscale(0.02) saturate(0.9) contrast(1.2) brightness(0.92);
+    }
+
+    .gallery-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.78));
+    }
+
+    .gallery-label {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      z-index: 3;
+    }
+
+    .gallery-label strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--chalk);
+    }
+
+    .gallery-label span {
+      color: var(--amber);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      padding: 130px 0;
+      background:
+        radial-gradient(circle at 50% 25%, rgba(140,200,200,0.16), transparent 34%),
+        radial-gradient(circle at 50% 90%, rgba(183,43,47,0.1), transparent 28%),
+        linear-gradient(180deg, #020707, #08191b 55%, #020707);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta h2 {
+      font-family: var(--font-logo);
+      font-size: clamp(58px, 12vw, 150px);
+      letter-spacing: 0.05em;
+      line-height: 0.88;
+      margin-bottom: 22px;
+      text-shadow: 0 0 42px rgba(140,200,200,0.16);
+    }
+
+    .cta p {
+      max-width: 660px;
+      color: rgba(240,237,227,0.66);
+      line-height: 1.8;
+      margin: 0 auto 32px;
+    }
+
+    footer {
+      padding: 34px 0;
+      border-top: 1px solid var(--border);
+      color: rgba(240,237,227,0.52);
+      background: #020707;
+    }
+
+    .footer-inner {
+      width: min(1320px, calc(100% - 44px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: center;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-logo {
+      font-family: var(--font-logo);
+      font-size: 25px;
+      color: var(--chalk);
+      letter-spacing: 0.12em;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(2,7,7,0.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .modal.open {
+      display: grid;
+    }
+
+    .modal-card {
+      width: min(940px, 100%);
+      max-height: min(760px, calc(100vh - 40px));
+      overflow: auto;
+      border: 1px solid rgba(216,181,82,0.32);
+      background:
+        radial-gradient(circle at 80% 0%, rgba(140,200,200,0.12), transparent 35%),
+        linear-gradient(135deg, rgba(11,34,37,0.98), rgba(2,7,7,0.98));
+      box-shadow: 0 44px 120px rgba(0,0,0,0.72);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      z-index: 5;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(240,237,227,0.15);
+      background: rgba(2,7,7,0.75);
+      color: var(--chalk);
+      cursor: pointer;
+      font-size: 22px;
+      transition: 0.25s ease;
+    }
+
+    .modal-close:hover {
+      border-color: var(--amber);
+      transform: rotate(90deg);
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+
+    .modal-image {
+      min-height: 620px;
+      background:
+        radial-gradient(circle at 50% 16%, rgba(140,200,200,0.18), transparent 32%),
+        #061011;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-image img {
+      width: 100%;
+      height: 100%;
+      min-height: 620px;
+      object-fit: cover;
+      filter: grayscale(0.08) saturate(0.75) contrast(1.13) brightness(0.82);
+    }
+
+    .modal-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(2,7,7,0.88));
+    }
+
+    .modal-content {
+      padding: 42px;
+    }
+
+    .modal-content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 0.98;
+      margin-bottom: 10px;
+    }
+
+    .modal-role {
+      color: var(--amber);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 26px;
+    }
+
+    .modal-content p {
+      color: rgba(240,237,227,0.68);
+      line-height: 1.85;
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .detail-list div {
+      border: 1px solid rgba(240,237,227,0.1);
+      background: rgba(240,237,227,0.035);
+      padding: 14px;
+    }
+
+    .detail-list strong {
+      display: block;
+      color: var(--cold);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .detail-list span {
+      color: rgba(240,237,227,0.66);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes titleFlicker {
+      0%, 92%, 95%, 100% { opacity: 1; filter: none; }
+      93% { opacity: 0.82; filter: blur(0.5px); }
+      96% { opacity: 0.9; transform: translateX(1px); }
+    }
+
+    @keyframes shimmer {
+      0%, 70% { transform: translateX(-130%); }
+      100% { transform: translateX(130%); }
+    }
+
+    @keyframes drip {
+      0%, 100% { opacity: 0.25; transform: scaleY(0.75); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .hero-inner,
+      .overview-grid,
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-info {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .seasons-grid,
+      .characters-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .lore-board {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .poster-card {
+        position: relative;
+        top: auto;
+      }
+
+      .modal-image,
+      .modal-image img {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links,
+      .watch-btn {
+        display: none;
+      }
+
+      .menu-btn {
+        display: inline-flex;
+      }
+
+      .nav-links.open {
+        display: grid;
+        position: fixed;
+        top: 68px;
+        left: 18px;
+        right: 18px;
+        padding: 20px;
+        background: rgba(2,7,7,0.96);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(18px);
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 130px 0 90px;
+      }
+
+      .hero-poster-wall {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-info,
+      .rules-mini,
+      .stats-row,
+      .seasons-grid,
+      .characters-grid,
+      .lore-board,
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery {
+        grid-auto-rows: 250px;
+      }
+
+      .gallery-card.large {
+        grid-row: auto;
+      }
+
+      .character-tools {
+        align-items: stretch;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .mystery-wrap {
+        min-height: auto;
+        display: grid;
+        gap: 16px;
+        padding: 18px;
+      }
+
+      .mystery-wrap svg {
+        display: none;
+      }
+
+      .pin {
+        position: relative;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        width: 100%;
+        transform: none !important;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#home" class="logo">FROM</a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#overview">The Town</a></li>
+        <li><a href="#seasons">Seasons</a></li>
+        <li><a href="#lore">Rules</a></li>
+        <li><a href="#characters">Characters</a></li>
+        <li><a href="#mystery">Mystery</a></li>
+      </ul>
+
+      <button class="watch-btn" onclick="document.querySelector('#cta').scrollIntoView({behavior:'smooth'})">
+        Made By Arwand
+      </button>
+
+      <button class="menu-btn" id="menuBtn">Menu</button>
+    </div>
+  </nav>
+
+  <header class="hero" id="home">
+    <canvas id="mistCanvas"></canvas>
+
+    <div class="hero-poster-wall" aria-hidden="true">
+      <div class="poster-panel one"></div>
+      <div class="poster-panel two"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="hero-kicker"><span></span> Arwands Original Work - loyal for the Show</div>
+        <h1 class="hero-title">
+          FROM
+          <small>Every road leads back</small>
+        </h1>
+        <p class="hero-desc">
+          A nightmare town traps everyone who enters. By day, survivors search for answers.
+          By night, smiling things come out of the forest. The only rule that matters:
+          get inside before dark.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#characters" class="btn btn-primary">Explore Characters</a>
+          <a href="#lore" class="btn btn-secondary">Enter the Rules</a>
+        </div>
+      </div>
+
+      <div class="hero-info">
+        <article class="signal-card">
+          <h3>Signal Lost</h3>
+          <p>
+            No maps. No reception. No exit. Cars, buses, families and strangers arrive from different places,
+            but the road always folds back into the same town.
+          </p>
+        </article>
+
+        <article class="signal-card">
+          <h3>Night Protocol</h3>
+          <div class="rules-mini">
+            <div class="mini-rule">
+              <strong>Talismans</strong>
+              <span>Hang them near the door and keep the monsters outside.</span>
+            </div>
+            <div class="mini-rule">
+              <strong>Windows</strong>
+              <span>Never open them. The monsters know how to smile.</span>
+            </div>
+            <div class="mini-rule">
+              <strong>Forest</strong>
+              <span>The trees are not just trees. They remember.</span>
+            </div>
+            <div class="mini-rule">
+              <strong>Hope</strong>
+              <span>The town gives answers only when it wants something back.</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="scroll-cue">Scroll</div>
+  </header>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>No one leaves</span><b>✦</b>
+      <span>The forest wakes at night</span><b>✦</b>
+      <span>Hang the talisman</span><b>✦</b>
+      <span>The road loops back</span><b>✦</b>
+      <span>Do not open the window</span><b>✦</b>
+      <span>The children are watching</span><b>✦</b>
+
+      <span>No one leaves</span><b>✦</b>
+      <span>The forest wakes at night</span><b>✦</b>
+      <span>Hang the talisman</span><b>✦</b>
+      <span>The road loops back</span><b>✦</b>
+      <span>Do not open the window</span><b>✦</b>
+      <span>The children are watching</span><b>✦</b>
+    </div>
+  </div>
+
+  <section class="section" id="overview">
+    <div class="container">
+      <div class="overview-grid">
+        <aside class="poster-card reveal">
+          <div class="poster-art">
+            <div class="tree-line"></div>
+          </div>
+        </aside>
+
+        <div class="overview-copy reveal">
+          <div class="eyebrow">The Town</div>
+          <h2 class="section-title">The place does not want them to leave.</h2>
+          <p class="section-copy">
+            FROM follows the residents of a mysterious town that traps anyone unlucky enough to enter.
+            The survivors try to preserve a normal life, but each night the surrounding forest releases
+            creatures that look human, speak softly, and kill brutally. The show mixes survival drama,
+            supernatural horror, family trauma, mythology, and a constantly expanding puzzle.
+          </p>
+
+          <div class="stats-row">
+            <div class="stat">
+              <strong>4</strong>
+              <span>Seasons</span>
+            </div>
+            <div class="stat">
+              <strong>2022</strong>
+              <span>Premiere</span>
+            </div>
+            <div class="stat">
+              <strong>MGM+</strong>
+              <span>Network</span>
+            </div>
+            <div class="stat">
+              <strong>5th</strong>
+              <span>Final Season</span>
+            </div>
+          </div>
+
+          <div class="quote-box">
+            <p>
+              “The scariest part is not that the monsters come out at night.
+              It is that the town keeps teaching people how little they understand.”
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="noise-line"></div>
+
+  <section class="section" id="seasons">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">Episode Guide</div>
+        <h2 class="section-title">Four chapters of dread.</h2>
+        <p class="section-copy">
+          Use these season cards as a clean landing-page guide. They are written to sell the mood without turning the page into a boring encyclopedia.
+        </p>
+      </div>
+
+      <div class="seasons-grid">
+        <article class="season-card reveal" data-season="01">
+          <div class="season-badge">Season 1 · 2022</div>
+          <h3>The Arrival</h3>
+          <p>
+            The Matthews family enters the town, Boyd tries to keep order, and the audience learns the brutal rules of nightfall.
+          </p>
+          <ul>
+            <li>Introduces the road loop.</li>
+            <li>Establishes Colony House and Township.</li>
+            <li>Reveals the talisman defense.</li>
+            <li>Ends with deeper questions underground.</li>
+          </ul>
+        </article>
+
+        <article class="season-card reveal" data-season="02">
+          <div class="season-badge">Season 2 · 2023</div>
+          <h3>The Bus</h3>
+          <p>
+            A bus full of new survivors arrives, resources are stretched, and the town becomes more aggressive.
+          </p>
+          <ul>
+            <li>New arrivals reshape the social balance.</li>
+            <li>Boyd brings back a terrifying infection.</li>
+            <li>Dreams, visions, and voices intensify.</li>
+            <li>The mystery expands beyond the streets.</li>
+          </ul>
+        </article>
+
+        <article class="season-card reveal" data-season="03">
+          <div class="season-badge">Season 3 · 2024</div>
+          <h3>The Pattern</h3>
+          <p>
+            The show pushes harder into trauma, sacrifice, reincarnation, and the hidden design behind the town.
+          </p>
+          <ul>
+            <li>Tabitha’s journey changes the escape question.</li>
+            <li>Jade’s visions become more important.</li>
+            <li>Victor’s memories gain new weight.</li>
+            <li>The Man in Yellow becomes unavoidable.</li>
+          </ul>
+        </article>
+
+        <article class="season-card reveal" data-season="04">
+          <div class="season-badge">Season 4 · 2026</div>
+          <h3>The Cost</h3>
+          <p>
+            The closer the residents get to answers, the more the town punishes them for asking.
+          </p>
+          <ul>
+            <li>More focus on the town’s origin.</li>
+            <li>Higher cost for every discovery.</li>
+            <li>Man in Yellow mythology deepens.</li>
+            <li>Leads toward the final season.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="lore">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">Rules & Mythology</div>
+        <h2 class="section-title">Survival has rules. The town has worse ones.</h2>
+        <p class="section-copy">
+          These cards are written like premium streaming-site lore blocks. They give the viewer the feeling of the show without overexplaining everything.
+        </p>
+      </div>
+
+      <div class="lore-board">
+        <article class="lore-card reveal">
+          <div class="lore-icon">🌲</div>
+          <h3>The Forest</h3>
+          <p>
+            The forest surrounds the town like a living boundary. It hides monsters, impossible trees,
+            visions, voices, and paths that should not exist.
+          </p>
+        </article>
+
+        <article class="lore-card reveal">
+          <div class="lore-icon">🪨</div>
+          <h3>The Talismans</h3>
+          <p>
+            Strange carved stones protect enclosed spaces from the creatures. They do not explain the town,
+            but they give the residents one thing more precious than truth: a night of survival.
+          </p>
+        </article>
+
+        <article class="lore-card reveal">
+          <div class="lore-icon">🛣️</div>
+          <h3>The Looping Road</h3>
+          <p>
+            Leave by car and the road returns you to town. The trap does not behave like geography.
+            It behaves like a decision already made.
+          </p>
+        </article>
+
+        <article class="lore-card reveal">
+          <div class="lore-icon">🧴</div>
+          <h3>The Bottle Trees</h3>
+          <p>
+            Bottles hanging from branches form one of the town’s most haunting symbols.
+            Their purpose connects memory, ritual, movement, and the deeper mythology.
+          </p>
+        </article>
+
+        <article class="lore-card reveal">
+          <div class="lore-icon">👦</div>
+          <h3>The Children</h3>
+          <p>
+            Pale children appear in visions and symbols. They are tied to the oldest horror beneath the town,
+            and saving them may be connected to freeing everyone.
+          </p>
+        </article>
+
+        <article class="lore-card reveal">
+          <div class="lore-icon">🟡</div>
+          <h3>The Man in Yellow</h3>
+          <p>
+            A sinister figure connected to the town’s deeper design. He represents knowledge, manipulation,
+            and the terrifying possibility that the nightmare has an intelligence.
+          </p>
+        </article>
+
+         <article class="lore-card reveal">
+          <div class="lore-icon">Hassan</div>
+          <h3>The Man who Spoils the Show</h3>
+          <p>
+            Hassan the new towns nighmare, the one who read the story and spoils it for everyone, not even the man in yellow is that cruel.
+            will Aland finish the show before getting spoiled by the nightmare.
+          </p>
+        </article>
+
+        <article class="lore-card reveal">
+          <div class="lore-icon">Aland</div>
+          <h3>The Man who failed to be an architect</h3>
+          <p>
+            failed to be an architect, he was one of the Hassans victim, he was able to escape his cruelty thanks to his will power and goal in life (to sleep after a long day).
+          </p>
+        </article>
+
+        
+      </div>
+    </div>
+  </section>
+
+  <div class="noise-line"></div>
+
+  <section class="section" id="characters">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">The Trapped</div>
+        <h2 class="section-title">Characters of FROM.</h2>
+        <p class="section-copy">
+          Filter by group, search by name, and click any card to open a cinematic character profile.
+        </p>
+      </div>
+
+      <div class="character-tools reveal">
+        <div class="filters" id="filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="Township">Township</button>
+          <button class="filter-btn" data-filter="Colony House">Colony House</button>
+          <button class="filter-btn" data-filter="Matthews">Matthews</button>
+          <button class="filter-btn" data-filter="Bus">Bus</button>
+          <button class="filter-btn" data-filter="Entity">Entities</button>
+        </div>
+
+        <input class="search" id="searchInput" type="search" placeholder="Search character or actor..." />
+      </div>
+
+      <div class="characters-grid" id="charactersGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="mystery">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">Mystery Board</div>
+        <h2 class="section-title">Everything connects.</h2>
+        <p class="section-copy">
+          Add this section to make the site feel premium and different. It turns the mythology into a visual investigation wall.
+        </p>
+      </div>
+
+      <div class="mystery-wrap reveal">
+        <svg viewBox="0 0 1200 560" preserveAspectRatio="none">
+          <line x1="150" y1="120" x2="600" y2="270" stroke="#d8b552" stroke-width="2" />
+          <line x1="600" y1="270" x2="990" y2="115" stroke="#8cc8c8" stroke-width="2" />
+          <line x1="600" y1="270" x2="230" y2="455" stroke="#b72b2f" stroke-width="2" />
+          <line x1="600" y1="270" x2="960" y2="430" stroke="#d8b552" stroke-width="2" />
+          <line x1="150" y1="120" x2="960" y2="430" stroke="#8cc8c8" stroke-width="1" opacity="0.6" />
+        </svg>
+
+        <article class="pin">
+          <h3>The Road</h3>
+          <p>Different starting points. Same destination. The trap chooses the traveler.</p>
+        </article>
+
+        <article class="pin">
+          <h3>The Forest</h3>
+          <p>The forest is a boundary, a weapon, and a memory system.</p>
+        </article>
+
+        <article class="pin">
+          <h3>The Children</h3>
+          <p>The repeated visions point toward an older sacrifice and a possible cure.</p>
+        </article>
+
+        <article class="pin">
+          <h3>The Talismans</h3>
+          <p>Protection exists, but only inside rules the town allows.</p>
+        </article>
+
+        <article class="pin">
+          <h3>Yellow</h3>
+          <p>The color of warning, decay, and knowledge that should not be trusted.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="gallery">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">Visual Direction</div>
+        <h2 class="section-title">Poster-inspired design language.</h2>
+        <p class="section-copy">
+          Dark teal shadows, cold fog, dirty chalk text, small yellow accents, and a sickly green-blue atmosphere.
+        </p>
+      </div>
+
+      <div class="gallery reveal">
+        <article class="gallery-card large">
+          <img src="https://images.immediate.co.uk/production/volatile/sites/3/2024/10/from-season-3-episode-5-a659385.jpg?quality=90&resize=980%2C654" alt="Boyd Stevens in FROM">
+          <div class="gallery-label">
+            <strong>The Town</strong>
+            <span>Broken roads · cold daylight</span>
+          </div>
+        </article>
+
+        <article class="gallery-card">
+          <img src="https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20100967R2-2f0714d.jpg?quality=90&fit=700%2C466" alt="Boyd Stevens">
+          <div class="gallery-label">
+            <strong>Boyd</strong>
+            <span>Leader under pressure</span>
+          </div>
+        </article>
+
+        <article class="gallery-card">
+          <img src="https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20100951R-303eb04.jpg?quality=90&fit=700%2C466" alt="Tabitha Matthews">
+          <div class="gallery-label">
+            <strong>Tabitha</strong>
+            <span>Memory · escape · return</span>
+          </div>
+        </article>
+
+        <article class="gallery-card">
+          <img src="https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20101257R-a0a284e.jpg?quality=90&fit=700%2C466" alt="Jade Herrera">
+          <div class="gallery-label">
+            <strong>Jade</strong>
+            <span>Symbols · obsession</span>
+          </div>
+        </article>
+
+        <article class="gallery-card">
+          <img src="https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0211FROMS01-3f4c26a.jpg?quality=90&fit=700%2C466" alt="Victor">
+          <div class="gallery-label">
+            <strong>Victor</strong>
+            <span>The memory of the town</span>
+          </div>
+        </article>
+
+        <article class="gallery-card">
+          <img src="C:\Users\Jin-ps\Desktop\Dr-H.jpeg" alt="Victor">
+          <div class="gallery-label">
+            <strong>Dxtor Hassan</strong>
+            <span>The spoiler nightmare!</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="cta">
+    <div class="container reveal">
+      <h2>FROM</h2>
+      <p>
+        Build this as a premium landing page, a fan project, or a streaming-style concept.
+        Replace the local hero poster files with your own poster images for the strongest result:
+        <strong>images/from-poster-1.png</strong> and <strong>images/from-poster-2.png</strong>.
+      </p>
+      <a class="btn btn-primary" href="#home">Go Back to the Town</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">FROM</div>
+      <div>
+        Fan-made educational website concept. FROM belongs to its respective rights holders.
+        Character photos are loaded from publicly available editorial image URLs.
+      </div>
+      <div>Designed in teal fog, chalk white, amber decay.</div>
+    </div>
+  </footer>
+
+  <div class="modal" id="characterModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose" aria-label="Close modal">×</button>
+      <div class="modal-grid">
+        <div class="modal-image">
+          <img id="modalImg" src="" alt="">
+        </div>
+        <div class="modal-content">
+          <h2 id="modalName"></h2>
+          <div class="modal-role" id="modalRole"></div>
+          <p id="modalSummary"></p>
+          <p id="modalDeep"></p>
+          <div class="detail-list" id="modalDetails"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const characters = [
+    {
+        name: "Dxtor Hassan",
+        actor: "Hassune ",
+        group: "Spoilership",
+        role: "Spoiling Every Show!",
+        image: "C:\Users\Jin-ps\Desktop\From\Images\Dr-H.jpeg",
+        short: "This is Alands Nighmare came back to life to hunt him, taunt him and the worse of them all, is to Spoil the show From him",
+        deep: "A true boomer, who thinks he is not a boomer!",
+        details: {
+          "Faction": "Yaketi Qwtabyan",
+          "Key pressure": "Just a Boomer",
+          "Symbol": "The bell, the talisman, the burden of command.",
+        }
+      },
+      {
+        name: "Boyd Stevens",
+        actor: "Harold Perrineau",
+        group: "Township",
+        role: "Sheriff · reluctant leader",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20100967R2-2f0714d.jpg?quality=90&fit=700%2C466",
+        short: "The town’s sheriff and de-facto leader, trying to keep everyone alive while the nightmare breaks him piece by piece.",
+        deep: "Boyd is a retired military man whose leadership is built on discipline, guilt, and an almost impossible sense of responsibility. He is the person people look to when the rules collapse, but the town constantly tests whether survival can exist without moral compromise.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Protecting people while carrying personal trauma.",
+          "Symbol": "The bell, the talisman, the burden of command.",
+          "Design note": "Use him as the hero face of the website because his expression matches the poster energy."
+        }
+      },
+      {
+        name: "Tabitha Matthews",
+        actor: "Catalina Sandino Moreno",
+        group: "Matthews",
+        role: "Mother · seeker of escape",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20100951R-303eb04.jpg?quality=90&fit=700%2C466",
+        short: "A mother who refuses to accept the town’s rules as final. Her visions and discoveries pull her toward the origin of the nightmare.",
+        deep: "Tabitha begins as a parent desperate to protect her family, but her connection to the town becomes one of the central keys to the show’s mythology. Her journey turns escape into something more complicated: memory, destiny, and return.",
+        details: {
+          "Faction": "Matthews family",
+          "Key pressure": "Family grief, visions, and the cost of finding answers.",
+          "Symbol": "The lighthouse, children, falling, returning.",
+          "Design note": "Her section should feel cold, blue, and haunted rather than violent."
+        }
+      },
+      {
+        name: "Jim Matthews",
+        actor: "Eion Bailey",
+        group: "Matthews",
+        role: "Engineer · father · skeptic",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20101257R-a0a284e.jpg?quality=90&fit=700%2C466",
+        short: "Tabitha’s husband, a practical thinker who keeps trying to solve the town like a broken system.",
+        deep: "Jim’s instinct is to test, build, and rationalize. He represents the human need to make impossible things obey logic, but FROM repeatedly shows that intelligence alone is not enough when the rules are supernatural.",
+        details: {
+          "Faction": "Matthews family",
+          "Key pressure": "Trying to protect his family with logic in a place that rejects logic.",
+          "Symbol": "Radio signals, collapsed house, impossible communication.",
+          "Design note": "Pair him visually with wires, static, and broken signal motifs."
+        }
+      },
+      {
+        name: "Jade Herrera",
+        actor: "David Alpay",
+        group: "Township",
+        role: "Tech genius · obsessive investigator",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20101257R-a0a284e.jpg?quality=90&fit=700%2C466",
+        short: "A wealthy tech developer whose arrogance turns into obsession as the town reveals symbols, visions, and patterns.",
+        deep: "Jade is one of the show’s strongest puzzle characters. He pushes into the mystery with intelligence and ego, but the deeper he looks, the more the town blurs discovery with madness.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Separating real clues from psychological collapse.",
+          "Symbol": "Symbols, bottles, visions, obsession.",
+          "Design note": "His card should feel like a conspiracy board."
+        }
+      },
+      {
+        name: "Donna Raines",
+        actor: "Elizabeth Saunders",
+        group: "Colony House",
+        role: "Colony House leader",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20100279R3-e2e5235.jpg?quality=90&fit=700%2C466",
+        short: "A hard survivor who leads Colony House with brutal honesty, emotional armor, and deep loyalty to her people.",
+        deep: "Donna understands the town’s social survival better than almost anyone. She is practical, protective, and often severe because she knows sentimentality can get people killed.",
+        details: {
+          "Faction": "Colony House",
+          "Key pressure": "Keeping a fragile community from tearing itself apart.",
+          "Symbol": "Colony House, rules, grief hidden under toughness.",
+          "Design note": "Warm amber shadows work well for Donna’s leadership energy."
+        }
+      },
+      {
+        name: "Victor",
+        actor: "Scott McCord",
+        group: "Colony House",
+        role: "Oldest survivor · keeper of memory",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0211FROMS01-3f4c26a.jpg?quality=90&fit=700%2C466",
+        short: "A long-time resident whose drawings, memories, and trauma make him one of the town’s most important witnesses.",
+        deep: "Victor survived the town as a child and carries its history in fragments. He often seems strange because he has adapted to the impossible for longer than anyone else.",
+        details: {
+          "Faction": "Colony House",
+          "Key pressure": "Remembering what trauma taught him to bury.",
+          "Symbol": "Lunchbox, drawings, trees, childhood memory.",
+          "Design note": "Use childlike paper textures and unsettling innocence around him."
+        }
+      },
+      {
+        name: "Kenny Liu",
+        actor: "Ricky He",
+        group: "Township",
+        role: "Deputy · moral center",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0201FROMS01-a3fe964.jpg?quality=90&fit=700%2C466",
+        short: "Boyd’s deputy and one of the town’s strongest moral anchors, even after suffering repeated loss.",
+        deep: "Kenny’s story is about grief and restraint. He is constantly pushed toward anger, but his humanity remains one of the things the town tries hardest to destroy.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Choosing who to become after loss.",
+          "Symbol": "Badge, diner, family duty.",
+          "Design note": "Keep his card clean and honorable, with cold blue highlights."
+        }
+      },
+      {
+        name: "Kristi Miller",
+        actor: "Chloe Van Landschoot",
+        group: "Township",
+        role: "Medic · doctor",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0514FROMS01-67cd46d.jpg?quality=90&fit=700%2C466",
+        short: "The town’s medical lifeline, forced to perform medicine in impossible conditions with no true safety net.",
+        deep: "Kristi carries the pressure of being needed by everyone. Her medical knowledge makes her essential, but the town constantly puts her in situations where skill cannot guarantee survival.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Saving people without proper resources.",
+          "Symbol": "Clinic, triage, emotional exhaustion.",
+          "Design note": "Use sterile cold light mixed with grime."
+        }
+      },
+      {
+        name: "Fatima Hassan",
+        actor: "Pegah Ghafoori",
+        group: "Colony House",
+        role: "Colony House resident",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0704FROMS01-232c1bc.jpg?quality=90&fit=700%2C466",
+        short: "A Colony House resident who begins as warmth and hope, then becomes connected to some of the show’s darkest transformations.",
+        deep: "Fatima’s arc is one of the most disturbing emotional turns in the show. She represents how the town corrupts even the characters who once made the nightmare feel survivable.",
+        details: {
+          "Faction": "Colony House",
+          "Key pressure": "Hope becoming horror.",
+          "Symbol": "Garden, pregnancy, transformation.",
+          "Design note": "Give her card beauty with something wrong underneath."
+        }
+      },
+      {
+        name: "Ellis Stevens",
+        actor: "Corteon Moore",
+        group: "Colony House",
+        role: "Artist · Boyd’s son",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0703FROMS01-41249a1.jpg?quality=90&fit=700%2C466",
+        short: "Boyd’s son, living with the emotional consequences of family trauma while trying to build love inside a nightmare.",
+        deep: "Ellis often serves as the emotional bridge between Boyd’s leadership burden and the personal damage it creates. His relationship with Fatima gives the show tenderness and dread.",
+        details: {
+          "Faction": "Colony House",
+          "Key pressure": "Forgiving family while surviving the town.",
+          "Symbol": "Art, Fatima, father-son fracture.",
+          "Design note": "Use softer contrast with hidden red undertones."
+        }
+      },
+      {
+        name: "Julie Matthews",
+        actor: "Hannah Cheramy",
+        group: "Matthews",
+        role: "Daughter · survivor",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0706FROMS01-c5d838e.jpg?quality=90&fit=700%2C466",
+        short: "Tabitha and Jim’s daughter, forced to grow up fast in a place that weaponizes fear.",
+        deep: "Julie’s arc captures the teenage loss of safety and normal life. She is caught between family loyalty, independence, and the town’s psychological attacks.",
+        details: {
+          "Faction": "Matthews family",
+          "Key pressure": "Growing up in a place built to break adults.",
+          "Symbol": "Family, trauma, choice.",
+          "Design note": "Use cold night tones and fractured glass motifs."
+        }
+      },
+      {
+        name: "Ethan Matthews",
+        actor: "Simon Webster",
+        group: "Matthews",
+        role: "Child · storyteller",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0506FROMS01-fdc010e.jpg?quality=90&fit=700%2C466",
+        short: "The youngest Matthews child, whose innocence and stories often echo the town’s strange mythology.",
+        deep: "Ethan sees the nightmare through the language of quests, heroes, and stories. In FROM, childhood imagination often feels dangerously close to hidden truth.",
+        details: {
+          "Faction": "Matthews family",
+          "Key pressure": "Trying to understand horror through stories.",
+          "Symbol": "Quest, drawings, children’s myths.",
+          "Design note": "Use innocent elements made uncomfortable."
+        }
+      },
+      {
+        name: "Sara Myers",
+        actor: "Avery Konrad",
+        group: "Township",
+        role: "Diner worker · haunted listener",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0422FROMS01-c0562cf.jpg?quality=90&fit=700%2C466",
+        short: "A troubled resident who hears voices and becomes a terrifying example of how the town manipulates people.",
+        deep: "Sara’s character is built around guilt, vulnerability, and the question of whether someone can come back from being used by the nightmare.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Guilt after manipulation.",
+          "Symbol": "Voices, diner, redemption.",
+          "Design note": "Add subtle audio/static styling if you expand the page."
+        }
+      },
+      {
+        name: "Father Khatri",
+        actor: "Shaun Majumder",
+        group: "Township",
+        role: "Priest · spiritual counsel",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0208FROMS01-073f03b.jpg?quality=90&fit=700%2C466",
+        short: "The town’s priest, whose faith and counsel continue to shape Boyd even after death.",
+        deep: "Khatri brings faith into a world that seems abandoned by God. His presence pushes the show’s moral questions beyond simple survival.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Faith under impossible horror.",
+          "Symbol": "Bible, confessional guilt, visions.",
+          "Design note": "Use candlelight, church shadows, and muted gold."
+        }
+      },
+      {
+        name: "Tian-Chen Liu",
+        actor: "Elizabeth Moy",
+        group: "Township",
+        role: "Diner owner · Kenny’s mother",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/0401FROMS01-edef2c9.jpg?quality=90&fit=700%2C466",
+        short: "A beloved diner figure and Kenny’s mother, representing warmth, routine, and the cost of losing ordinary life.",
+        deep: "Tian-Chen grounds the town in human routine: meals, family, kindness, and community. That makes the horror around her feel more painful.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Keeping family and community alive.",
+          "Symbol": "Diner, food, maternal strength.",
+          "Design note": "Use old diner warmth against cold fog."
+        }
+      },
+      {
+        name: "Tillie",
+        actor: "Deborah Grover",
+        group: "Bus",
+        role: "Bus passenger",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20200578R-0a2da70.jpg?quality=90&fit=700%2C466",
+        short: "A bus passenger whose presence adds mystery, empathy, and unease to the town’s newer arrivals.",
+        deep: "Tillie arrives with the bus group and quickly becomes part of the town’s social ecosystem, where every newcomer is both a person and a possible clue.",
+        details: {
+          "Faction": "Bus arrivals",
+          "Key pressure": "Adapting to impossible rules late in life.",
+          "Symbol": "Bus, hidden knowledge, calm under dread.",
+          "Design note": "Make her card quiet but suspicious."
+        }
+      },
+      {
+        name: "Bakta",
+        actor: "Angela Moore",
+        group: "Bus",
+        role: "Bus driver",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20200632R-53fcab1.jpg?quality=90&fit=700%2C466",
+        short: "The bus driver who brings a new wave of trapped people into the town.",
+        deep: "Bakta’s role is tied to one of the show’s major population shifts. Her bus changes the town’s balance and introduces new fears, conflicts, and possible clues.",
+        details: {
+          "Faction": "Bus arrivals",
+          "Key pressure": "Responsibility for passengers she could not save.",
+          "Symbol": "Bus, route, failed escape.",
+          "Design note": "Use road markings and headlights in her visual style."
+        }
+      },
+      {
+        name: "Marielle",
+        actor: "Kaelen Ohm",
+        group: "Bus",
+        role: "Kristi’s fiancée",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20500451R-3e0b18c.jpg?quality=90&fit=700%2C466",
+        short: "A bus passenger and Kristi’s fiancée, pulling the outside world directly into Kristi’s trapped life.",
+        deep: "Marielle makes the town crueler for Kristi because she brings back a relationship that belongs to the life Kristi lost. FROM often hurts people by returning what they wanted in the worst possible context.",
+        details: {
+          "Faction": "Bus arrivals",
+          "Key pressure": "Love, addiction, and survival under pressure.",
+          "Symbol": "Clinic, reunion, withdrawal.",
+          "Design note": "Pair her with Kristi visually if you add relationship maps."
+        }
+      },
+      {
+        name: "Randall",
+        actor: "A.J. Simmons",
+        group: "Bus",
+        role: "Volatile survivor",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20100179R2-9009377.jpg?quality=90&fit=700%2C466",
+        short: "A confrontational bus passenger whose distrust and anger make him dangerous, but also useful.",
+        deep: "Randall is one of the characters who challenges the town’s leadership structure. His volatility makes him hard to trust, but FROM often turns difficult people into important survivors.",
+        details: {
+          "Faction": "Bus arrivals",
+          "Key pressure": "Paranoia, aggression, and control.",
+          "Symbol": "Bus, isolation, cicadas.",
+          "Design note": "Use harsh contrast and sharp edges."
+        }
+      },
+      {
+        name: "Elgin Williams",
+        actor: "Nathan D. Simmons",
+        group: "Bus",
+        role: "Dream-haunted arrival",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2022/08/FROM20300454R-c0aae22.jpg?quality=90&fit=700%2C466",
+        short: "A bus passenger who had dreams connected to the town before he arrived.",
+        deep: "Elgin’s story shows that the town can touch people before they physically enter it. His dreams and visions make him one of the more supernatural-connected bus arrivals.",
+        details: {
+          "Faction": "Bus arrivals",
+          "Key pressure": "Dreams that feel like warnings.",
+          "Symbol": "Water, dreams, premonition.",
+          "Design note": "Use blue-green dream haze for his card."
+        }
+      },
+      {
+        name: "Henry Kavanaugh",
+        actor: "Robert Joy",
+        group: "Township",
+        role: "Victor’s father",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2023/05/GettyImages-1044419944-ddcb017.jpg?quality=90&fit=700%2C466",
+        short: "Victor’s father, a painful connection between the outside world and the town’s long-buried past.",
+        deep: "Henry expands Victor’s story beyond memory fragments. His presence makes the town’s tragedy feel generational and personal.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Facing the son and history he lost.",
+          "Symbol": "Family memory, grief, return.",
+          "Design note": "Use old-photo textures and dust."
+        }
+      },
+      {
+        name: "Acosta",
+        actor: "Samantha Brown",
+        group: "Township",
+        role: "Police officer",
+        image: "https://images.immediate.co.uk/production/volatile/sites/3/2023/05/GettyImages-2173265680-956cad0.jpg?quality=90&fit=700%2C466",
+        short: "A newer police officer overwhelmed by a place where authority, training, and procedure collapse immediately.",
+        deep: "Acosta represents official order entering a world that has no respect for official systems. The town reduces rank, law, and training to the same question everyone faces: survive the night.",
+        details: {
+          "Faction": "Township",
+          "Key pressure": "Losing control in a place without law.",
+          "Symbol": "Badge, panic, broken authority.",
+          "Design note": "Use cold police-light blues without making it too bright."
+        }
+      },
+      {
+        name: "The Boy in White",
+        actor: "Vox Smith / recurring figure",
+        group: "Entity",
+        role: "Mysterious guide",
+        image: "",
+        short: "A strange childlike figure who appears at important moments and may be helping, testing, or guiding the residents.",
+        deep: "The Boy in White is one of the show’s most ambiguous entities. His presence suggests the town’s supernatural system is not controlled by one simple force.",
+        details: {
+          "Faction": "Entity",
+          "Key pressure": "Trusting guidance without understanding the guide.",
+          "Symbol": "White clothes, forest appearances, children.",
+          "Design note": "Use a pale silhouette instead of a normal portrait."
+        }
+      },
+      {
+        name: "The Creatures",
+        actor: "Various performers",
+        group: "Entity",
+        role: "Night monsters",
+        image: "",
+        short: "Smiling humanlike monsters that come from the forest at night and obey rules the residents still do not fully understand.",
+        deep: "The creatures are terrifying because they are calm. They do not behave like animals; they manipulate, wait, speak, and enjoy fear.",
+        details: {
+          "Faction": "Entity",
+          "Key pressure": "The town’s nightly punishment system.",
+          "Symbol": "Smile, window, forest, night.",
+          "Design note": "Avoid showing too much. Shadows are scarier."
+        }
+      },
+      {
+        name: "The Man in Yellow",
+        actor: "Mystery figure",
+        group: "Entity",
+        role: "Antagonistic force",
+        image: "",
+        short: "A sinister yellow-clad figure tied to the deepest parts of the town’s mythology.",
+        deep: "The Man in Yellow represents forbidden knowledge and control. He feels less like a monster and more like a manager of the nightmare.",
+        details: {
+          "Faction": "Entity",
+          "Key pressure": "Knowledge that costs more than ignorance.",
+          "Symbol": "Yellow suit, decay, manipulation.",
+          "Design note": "Use sickly amber instead of bright yellow."
+        }
+      }
+    ];
+
+    const grid = document.getElementById("charactersGrid");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const searchInput = document.getElementById("searchInput");
+    const modal = document.getElementById("characterModal");
+    const modalClose = document.getElementById("modalClose");
+
+    let currentFilter = "all";
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getInitials(name) {
+      return name
+        .split(" ")
+        .map(part => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+    }
+
+    function renderCharacters() {
+      const query = searchInput.value.trim().toLowerCase();
+
+      const filtered = characters.filter(character => {
+        const matchesFilter = currentFilter === "all" || character.group === currentFilter;
+        const haystack = `${character.name} ${character.actor} ${character.role} ${character.group}`.toLowerCase();
+        const matchesSearch = haystack.includes(query);
+        return matchesFilter && matchesSearch;
+      });
+
+      grid.innerHTML = filtered.map((character, index) => {
+        const imageHtml = character.image
+          ? `<img src="${escapeHtml(character.image)}" alt="${escapeHtml(character.name)}" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-face').style.display='grid';">`
+          : "";
+
+        return `
+          <article class="character-card reveal visible" data-index="${characters.indexOf(character)}" style="transition-delay:${Math.min(index * 0.03, 0.35)}s">
+            <div class="tag">${escapeHtml(character.group)}</div>
+            <div class="character-img">
+              <div class="fallback-face" style="${character.image ? "display:none" : "display:grid"}">${escapeHtml(getInitials(character.name))}</div>
+              ${imageHtml}
+            </div>
+            <div class="character-body">
+              <h3>${escapeHtml(character.name)}</h3>
+              <div class="actor">${escapeHtml(character.actor)}</div>
+              <p class="short">${escapeHtml(character.short)}</p>
+              <div class="chips">
+                <span class="chip">${escapeHtml(character.role)}</span>
+                <span class="chip">Open profile</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".character-card").forEach(card => {
+        card.addEventListener("click", () => {
+          openCharacter(Number(card.dataset.index));
+        });
+      });
+    }
+
+    function openCharacter(index) {
+      const c = characters[index];
+
+      document.getElementById("modalName").textContent = c.name;
+      document.getElementById("modalRole").textContent = `${c.actor} · ${c.role}`;
+      document.getElementById("modalSummary").textContent = c.short;
+      document.getElementById("modalDeep").textContent = c.deep;
+
+      const img = document.getElementById("modalImg");
+      img.src = c.image || "";
+      img.alt = c.name;
+      img.style.display = c.image ? "block" : "none";
+
+      const details = document.getElementById("modalDetails");
+      details.innerHTML = Object.entries(c.details).map(([key, value]) => `
+        <div>
+          <strong>${escapeHtml(key)}</strong>
+          <span>${escapeHtml(value)}</span>
+        </div>
+      `).join("");
+
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.filter;
+        renderCharacters();
+      });
+    });
+
+    searchInput.addEventListener("input", renderCharacters);
+    modalClose.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeModal();
+    });
+
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeModal();
+    });
+
+    renderCharacters();
+
+    /* NAV */
+    const nav = document.getElementById("nav");
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+
+    window.addEventListener("scroll", () => {
+      nav.classList.toggle("scrolled", window.scrollY > 45);
+    });
+
+    menuBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => navLinks.classList.remove("open"));
+    });
+
+    /* REVEAL */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: "0px 0px -40px 0px"
+    });
+
+    document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
+
+    /* MIST CANVAS */
+    const canvas = document.getElementById("mistCanvas");
+    const ctx = canvas.getContext("2d");
+    let w, h, particles;
+
+    function resizeCanvas() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = Math.max(window.innerHeight, 720);
+      createParticles();
+    }
+
+    function createParticles() {
+      const count = Math.floor((w * h) / 14000);
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2.8 + 0.6,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: Math.random() * -0.18 - 0.03,
+        alpha: Math.random() * 0.34 + 0.08,
+        tint: Math.random() > 0.82 ? "amber" : "cyan"
+      }));
+    }
+
+    function drawMist() {
+      ctx.clearRect(0, 0, w, h);
+
+      const gradient = ctx.createRadialGradient(w * 0.68, h * 0.28, 0, w * 0.68, h * 0.28, Math.max(w, h) * 0.55);
+      gradient.addColorStop(0, "rgba(140, 200, 200, 0.12)");
+      gradient.addColorStop(0.45, "rgba(27, 89, 96, 0.05)");
+      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.y < -10) {
+          p.y = h + 10;
+          p.x = Math.random() * w;
+        }
+
+        if (p.x < -10) p.x = w + 10;
+        if (p.x > w + 10) p.x = -10;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.tint === "amber"
+          ? `rgba(216, 181, 82, ${p.alpha})`
+          : `rgba(200, 238, 238, ${p.alpha})`;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(drawMist);
+    }
+
+    resizeCanvas();
+    drawMist();
+    window.addEventListener("resize", resizeCanvas);
+
+    /* SUBTLE HERO PARALLAX */
+    const heroTitle = document.querySelector(".hero-title");
+    document.addEventListener("mousemove", event => {
+      const x = (event.clientX / window.innerWidth - 0.5) * 8;
+      const y = (event.clientY / window.innerHeight - 0.5) * 5;
+      heroTitle.style.transform = `translate(${x}px, ${y}px)`;
+    });
+  </script>
+</body>
+</html>
